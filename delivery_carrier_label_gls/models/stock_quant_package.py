@@ -32,7 +32,7 @@ class StockQuantPackage(models.Model):
         client.cancel_parcel(self.parcel_tracking)
         self.parcel_tracking = False
         self.gls_package_ref = False
-        label = self.env["shipping.label"].search([("package_id", "in", self.id)])
+        label = self.env["shipping.label"].search([("package_id", "=", self.id)])
         label.attachment_id.unlink()
         label.unlink()
 
