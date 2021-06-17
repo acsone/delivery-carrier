@@ -16,6 +16,7 @@
             <group>
               <field name="gls_url" />
               <field name="gls_url_test" />
+              <field name="gls_label_format"/>
             </group>
             <group>
               <field name="gls_login" />
