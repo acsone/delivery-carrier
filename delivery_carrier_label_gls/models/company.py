@@ -15,4 +15,3 @@ class ResCompany(models.Model):
         size=10,
         help="Contact id for GLS International transportation (T8914)",
     )
-    gls_test = fields.Boolean(string="Url Test", help="Use testing webservice")
