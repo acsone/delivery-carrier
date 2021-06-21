@@ -27,8 +27,6 @@
         <separator string="Account" />
         <group name="account" col="4">
           <field name="gls_contact_id" class="oe_inline" />
-          <newline />
-          <field name="gls_test" />
         </group>
       </form>
     </field>

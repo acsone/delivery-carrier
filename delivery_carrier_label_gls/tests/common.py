@@ -15,11 +15,12 @@ class TestGLS(SavepointCase):
             "name": "Test GLS",
             "company_id": cls.company.id,
             "delivery_type": "gls",
-            "gls_test": True,
+            "prod_environment": False,
             "gls_login": "LOGIN",  # Fill these if you want to test your integration
             "gls_password": "PASSWORD",  # the 3 parameters are needed by the client
             "gls_contact_id": "CONTACTID",  # you may need to adapt the test addresses
             "gls_url_test": "https://shipit-wbm-test01.gls-group.eu:8443/backend/rs/",
+            "gls_url_tracking": "https://gls-group.eu/EU/en/parcel-tracking/match=%s",
         }
         cls.gls_carrier = cls.env["delivery.carrier"].create(vals_gls_carrier)
         cls.gls_client = cls.env["delivery.client.gls"].create(
