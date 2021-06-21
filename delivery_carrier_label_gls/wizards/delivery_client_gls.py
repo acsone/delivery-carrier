@@ -39,7 +39,7 @@ class DeliveryClientGls(models.TransientModel):
 
     def _get_gls_connections_parameters(self):
         self.ensure_one()
-        test_mode = self.carrier_id.company_id.gls_test
+        test_mode = not self.carrier_id.company_id.prod_environment
         keys = ["gls_url_test" if test_mode else "gls_url"]
         keys += ["gls_login", "gls_password"]
         parameters = []

@@ -21,11 +21,9 @@ class GlsConfigSettings(models.TransientModel):
         default=_default_company,
     )
     gls_contact_id = fields.Char(related="company_id.gls_contact_id")
-    gls_test = fields.Boolean(related="company_id.gls_test")
 
     @api.onchange("company_id")
     def onchange_company_id(self):
         company = self.company_id
         if company:
             self.gls_contact_id = company.gls_contact_id
-            self.gls_test = company.gls_test

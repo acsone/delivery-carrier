@@ -22,7 +22,6 @@ class DeliveryCarrier(models.Model):
     gls_password = fields.Char(string="Login Password", group="base.group_system")
     gls_url = fields.Char(string="Service Url", group="base.group_system")
     gls_url_test = fields.Char(string="Test Service Url", group="base.group_system")
-    gls_test = fields.Boolean(related="company_id.gls_test")
     gls_url_tracking = fields.Char(
         help="Root URL for parcel tracking. Needs a %s for the tracking reference."
     )
@@ -36,8 +35,42 @@ class DeliveryCarrier(models.Model):
             ("toshiba", "Toshiba")
         ],
         default="pdf",
-        required=True
     )
+
+    @api.constrains("delivery_type", "gls_contact_id", "gls_login",
+                    "gls_password", "gls_url_tracking", "gls_label_format")
+    def _check_gls_fields(self):
+        gls_field_names = [
+            "gls_contact_id",
+            "gls_login",
+            "gls_password",
+            "gls_url_tracking",
+            "gls_label_format"
+        ]
+        for rec in self.filtered(lambda c: c.delivery_type == "gls"):
+            for field_name in gls_field_names:
+                value = rec[field_name]
+                if not value:
+                    field = rec._fields[field_name]
+                    description_string = field._description_string(self.env)
+                    raise ValidationError(
+                        _("The GLS field '%s' is required for carrier %s")
+                        % (description_string, rec.name)
+                    )
+
+    @api.constrains("delivery_type", "prod_environment", "gls_url", "gls_url_test")
+    def _check_fls_url(self):
+        for rec in self.filtered(lambda c: c.delivery_type == "gls"):
+            if not rec.prod_environment and not rec.gls_url_test:
+                raise ValidationError(
+                    _("The GLS field 'Test Service Url' is required in "
+                      "test mode")
+                )
+            if rec.prod_environment and not rec.gls_url:
+                raise ValidationError(
+                    _("The GLS field 'Service Url' is required in "
+                      "non test mode")
+                )
 
     def gls_get_shipping_price_from_so(self, order):
         self.ensure_one()
