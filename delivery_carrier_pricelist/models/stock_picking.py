@@ -2,22 +2,21 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from lxml import etree
 
-from odoo import models
+from odoo import api, models
 from odoo.osv import expression
 
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    def fields_view_get(
-        self, view_id=None, view_type="form", toolbar=False, submenu=False
-    ):
-        result = super().fields_view_get(
-            view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu
+    @api.model
+    def _get_view(self, view_id=None, view_type="form", **options):
+        arch, view = super()._get_view(
+            view_id=view_id, view_type=view_type, options=options
         )
-        if result.get("name") == "stock.picking.form":
-            result["arch"] = self._fields_view_get_adapt_attrs(result["arch"])
-        return result
+        if view.name == "stock.picking.form":
+            arch = self._fields_view_get_adapt_attrs(arch)
+        return arch, view
 
     def _fields_view_get_adapt_attrs(self, view_arch):
         doc = etree.XML(view_arch)
