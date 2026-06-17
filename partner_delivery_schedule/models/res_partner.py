@@ -30,3 +30,16 @@ class ResPartner(models.Model):
             )
         )
         return bool(delivery_records)
+
+    def get_next_schedule(self, from_date=None, horizon=None):
+        """Next reachable (schedule, departure) for this partner.
+
+        :param from_date: UTC-naive datetime anchor; defaults to now()
+        :param horizon: days to search ahead; defaults to company setting
+        """
+        self.ensure_one()
+        return self.delivery_schedule_ids.get_next_schedule(
+            from_date=from_date,
+            tz=self.env.user.tz or self.tz,
+            horizon=horizon,
+        )
